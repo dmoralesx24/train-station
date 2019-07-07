@@ -65,6 +65,13 @@ database.ref().on("child_added", function(childSnapshot) {
     console.log(time);
     console.log(frequency);
 
+
+    var difference = moment().diff(moment(time), "minutes");
+    console.log(difference);
+
+    var nextTrain = moment().add(minUntil, "minutes").format('LT');
+    console.log(minLeft);
+
     var timePretty = moment.unix(time).format("HH:mm");
 
     var nextTrain = moment(timePretty).add(frequency, "minutes");
