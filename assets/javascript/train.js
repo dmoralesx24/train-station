@@ -47,43 +47,28 @@ $("#add-train-btn").on("click", function(event){
  $("#train-name-input").val("");
  $("#destination-input").val("");
  $("#time-input").val("");
- $("#destination-input").val("");
+ $("#frequency-input").val("");
 });
 
 // 3. adding into firebase the info 
 database.ref().on("child_added", function(childSnapshot) {
-    console.log(childSnapshot.val());
-
+    
     // store everything into a variable 
     var trainName = childSnapshot.val().train;
     var destination = childSnapshot.val().destination;
     var time = childSnapshot.val().time;
     var frequency = childSnapshot.val().frequency;
 
-    console.log(trainName);
-    console.log(destination);
-    console.log(time);
-    console.log(frequency);
-
-
-    var difference = moment().diff(moment(time), "minutes");
-    console.log(difference);
-
-    var nextTrain = moment().add(minUntil, "minutes").format('LT');
-    console.log(minLeft);
-
-    var timePretty = moment.unix(time).format("HH:mm");
-
-    var nextTrain = moment(timePretty).add(frequency, "minutes");
-    var minLeft = moment().diff(nextTrain, "minutes")
-    console.log(minLeft);
+    var remainder = moment().diff(moment.unix(time), "minutes")%frequency;
+    var minutes = frequency - remainder;
+    var arrival = moment().add(minutes, "m").format("hh:mm A");
 
     var newRow = $("<tr>").append(
         $("<td>").text(trainName),
         $("<td>").text(destination),
         $("<td>").text(frequency),
-        $("<td>").text(nextTrain),
-        $("<td>").text(minLeft),
+        $("<td>").text(arrival),
+        $("<td>").text(minutes),
     );
 
     $("#train-table > tbody").append(newRow);
